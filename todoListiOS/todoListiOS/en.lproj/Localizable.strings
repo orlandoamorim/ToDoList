@@ -95,7 +95,7 @@
 "alert.cancel"      = "Cancel";
 "alert.createdAt"   = "Created At";
 "alert.ok"          = "Ok";
-
+"alertType.success" = "Successfuly cadastraded";
 // type - English - en.lproj/Localizable.strings
 
 "type.home"         = "Home";

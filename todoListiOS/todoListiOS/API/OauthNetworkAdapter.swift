@@ -29,6 +29,7 @@ struct OauthNetworkAdapter {
             .subscribe { event in
                 switch event {
                 case .success(let user):
+                    print("AQUI")
                     successCallback(user)
                 case .error(let error): errorCallback(error)
                 }

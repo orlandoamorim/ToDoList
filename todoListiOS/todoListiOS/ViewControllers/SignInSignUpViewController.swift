@@ -25,6 +25,7 @@ class SignInSignUpViewController: FormViewController {
         super.viewDidLoad()
         setupUI()
         verifyToken()
+        setupButtons()
     }
     
     override func didReceiveMemoryWarning() {
@@ -39,6 +40,12 @@ class SignInSignUpViewController: FormViewController {
         }else {
             setupForm()
         }
+    }
+    
+    fileprivate func setupButtons() {
+        /** Adding an UIBarButtonItem on right side of Navigation Bar **/
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: ToDoList.images.ip.image, style: UIBarButtonItemStyle.plain, target: self, action: #selector(setupIP))
+        
     }
     
     private func setupUI() {
@@ -220,12 +227,12 @@ class SignInSignUpViewController: FormViewController {
         guard let password = passwordRow.value else { return }
         
         OauthNetworkAdapter.signUp(email: email, password: password, success: { (user) in
-            print(user)
+            self.alert(withTitle: ToDoList.localizable.alertType.success.localized, message: "")
+            self.navigationController?.popViewController(animated: true)
         }) { (error) in
             if let err = error as? MoyaError, let data = err.response?.data {
                 if let oauthError = try? JSONDecoder().decode(ServerMessage.self, from: data) {
                     self.alert(withTitle: ToDoList.localizable.alertType.ops.localized, message: oauthError.message)
-
                 }
             }
         }
@@ -239,5 +246,34 @@ class SignInSignUpViewController: FormViewController {
         let defaultAction = UIAlertAction(title: ToDoList.localizable.alert.ok.localized , style: .default, handler: nil)
         alertController.addAction(defaultAction)
         present(alertController, animated: true, completion: nil)
+    }
+    
+    @objc fileprivate func setupIP() {
+        let alertController = UIAlertController(title: "IP:PORT", message: "Digite o endereço IP e a PORTA do Servidor", preferredStyle: .alert)
+        
+        let confirmAction = UIAlertAction(title: ToDoList.localizable.alert.ok.localized, style: .default) { (_) in
+            if let field = alertController.textFields?[0], let ip = field.text {
+                let defaults = UserDefaults.standard
+                if let _ = defaults.object(forKey: "ip") {
+                    defaults.set(ip, forKey: "ip")
+                    defaults.synchronize()
+                }else {
+                    defaults.set(ip, forKey: "ip")
+                    defaults.synchronize()
+                }
+            }
+        }
+        
+        let cancelAction = UIAlertAction(title: ToDoList.localizable.alert.cancel.localized, style: .cancel) { (_) in }
+        
+        alertController.addTextField { (textField) in
+            textField.placeholder = "192.168.0.1:3000"
+            textField.keyboardType = .numbersAndPunctuation
+        }
+        
+        alertController.addAction(confirmAction)
+        alertController.addAction(cancelAction)
+        
+        self.present(alertController, animated: true, completion: nil)
     }
 }

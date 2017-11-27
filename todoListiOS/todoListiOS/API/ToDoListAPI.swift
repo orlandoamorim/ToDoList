@@ -22,7 +22,14 @@ enum ToDoListAPI {
 
 extension ToDoListAPI: TargetType {
 
-    var base: String { return "http://192.168.1.101:3000" }
+    var base: String {
+        let defaults = UserDefaults.standard
+        if let ip = defaults.object(forKey: "ip") as? String, let url = URL(string: ip) {
+            return "http://\(url)"
+        }
+        return "http://192.168.1.101:3000"
+        
+    }
     var baseURL: URL { return URL(string: base)! }
     
     var path: String {
@@ -76,9 +83,7 @@ extension ToDoListAPI: TargetType {
             var parameters = [String: String]()
             parameters["Authorization"] = "JWT " + accessToken
             return parameters
-        case .deleteTask:
-            var parameters = [String: Any]()
-            return parameters
+        case .deleteTask: return nil
         }
     }
 
@@ -100,8 +105,8 @@ extension ToDoListAPI: TargetType {
     
     var task: Task {
         switch self {
-//        case .deleteTask(let toDo) :
-//            return .requestParameters(parameters: [:], encoding: parameterEncoding)
+        case .deleteTask:
+            return .requestPlain
         default:
             return .requestParameters(parameters: parameters!, encoding: parameterEncoding)
         }

@@ -32,6 +32,11 @@ class ToDoListTableViewController: UITableViewController {
     fileprivate func setupButtons() {
         /** Adding an UIBarButtonItem on right side of Navigation Bar - ADD **/
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.add, target: self, action: #selector(createToDo))
+        
+        let sOut = UIBarButtonItem(image: ToDoList.images.signOut.image, style: UIBarButtonItemStyle.plain, target: self, action: #selector(signOut))
+        let ip = UIBarButtonItem(image: ToDoList.images.ip.image, style: UIBarButtonItemStyle.plain, target: self, action: #selector(setupIP))
+
+        navigationItem.leftBarButtonItems = [sOut, ip]
     }
 
     fileprivate func setupUI() {
@@ -107,28 +112,70 @@ class ToDoListTableViewController: UITableViewController {
         navigationController?.pushViewController(vc, animated: true)
     }
     
-    /*
-     
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+    override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        var toDo = self.tasks[indexPath.section][indexPath.row]
+        let completed = UIContextualAction(style: .normal, title: "Done") { (action, sourceView, completionHandler) in
+            print("index path of done: \(indexPath)")
+            toDo.isCompleted = toDo.isCompleted == true ? false : true
+            TaskNetworkAdapter.update(toDo: toDo, success: { (toDo) in
+                completionHandler(true)
+                self.setupValues()
+            }) { (error) in
+                if let err = error as? MoyaError, let data = err.response?.data {
+                    if let oauthError = try? JSONDecoder().decode(ServerMessage.self, from: data) {
+                        completionHandler(true)
+                        self.tableView.reloadData()
+                        self.alert(withTitle: ToDoList.localizable.alertType.ops.localized, message: oauthError.message)
+                    }
+                }else {
+                    completionHandler(true)
+                    self.tableView.reloadData()
+                    self.alert(withTitle: ToDoList.localizable.alertType.ops.localized, message: error.localizedDescription)
+                }
+            }
+        }
+        completed.image = ToDoList.images.done.image
+        completed.backgroundColor = toDo.isCompleted == true ? .red : .blue
+        
+        let swipeAction = UISwipeActionsConfiguration(actions: [completed])
+        swipeAction.performsFirstActionWithFullSwipe = true // This is the line which disables full swipe
+        return swipeAction
+        
     }
-    */
+    
+    
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let delete = UIContextualAction(style: .destructive, title: ToDoList.localizable.alert.delete.localized) { (action, sourceView, completionHandler) in
+            print("index path of delete: \(indexPath)")
+            let toDo = self.tasks[indexPath.section][indexPath.row]
+            
+            TaskNetworkAdapter.delete(toDo: toDo, success: { (serverMessage) in
+                completionHandler(true)
+                self.setupValues()
+                self.alert(withTitle: serverMessage.message, message: "")
+            }) { (error) in
+                if let err = error as? MoyaError, let data = err.response?.data {
+                    if let oauthError = try? JSONDecoder().decode(ServerMessage.self, from: data) {
+                        completionHandler(true)
+                        self.tableView.reloadData()
+                        self.alert(withTitle: ToDoList.localizable.alertType.ops.localized, message: oauthError.message)
+                    }
+                }else {
+                    completionHandler(true)
+                    self.tableView.reloadData()
+                    self.alert(withTitle: ToDoList.localizable.alertType.ops.localized, message: error.localizedDescription)
+                }
+            }
+        }
 
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+        let swipeAction = UISwipeActionsConfiguration(actions: [delete])
+        swipeAction.performsFirstActionWithFullSwipe = true // This is the line which disables full swipe
+        return swipeAction
     }
-    */
 
 
+    
+    
     /*
     // MARK: - Navigation
 
@@ -140,14 +187,14 @@ class ToDoListTableViewController: UITableViewController {
     */
 
     /** Create a pop up */
-    private func alert(withTitle title: String, message: String) {
+    fileprivate func alert(withTitle title: String, message: String) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let defaultAction = UIAlertAction(title: ToDoList.localizable.alert.ok.localized , style: .default, handler: nil)
         alertController.addAction(defaultAction)
         present(alertController, animated: true, completion: nil)
     }
     
-    @objc private func createToDo() {
+    @objc fileprivate func createToDo() {
         let vc = AddToDoViewController()
         let nc = UINavigationController(rootViewController: vc)
         if #available(iOS 11.0, *) {
@@ -155,5 +202,48 @@ class ToDoListTableViewController: UITableViewController {
             nc.navigationItem.largeTitleDisplayMode = .automatic
         }
         present(nc, animated: true, completion: nil)
+    }
+    
+    @objc fileprivate func signOut() {
+        let defaults = UserDefaults.standard
+        if let _ = defaults.object(forKey: "token") {
+            defaults.removeObject(forKey: "token")
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            appDelegate.window?.rootViewController = UIStoryboard(name: "Main", bundle: nil).instantiateInitialViewController()
+        }
+    }
+    
+    @objc fileprivate func setupIP() {
+        let alertController = UIAlertController(title: "IP:PORT", message: "Digite o endereço IP e a PORTA do Servidor", preferredStyle: .alert)
+        
+        let confirmAction = UIAlertAction(title: ToDoList.localizable.alert.ok.localized, style: .default) { (_) in
+            if let field = alertController.textFields?[0], let ip = field.text {
+                let defaults = UserDefaults.standard
+                if let _ = defaults.object(forKey: "ip") {
+                    defaults.set(ip, forKey: "ip")
+                    defaults.synchronize()
+                    self.setupValues()
+                }else {
+                    defaults.set(ip, forKey: "ip")
+                    defaults.synchronize()
+                    self.setupValues()
+                }
+            } else {
+                // user did not fill field
+                self.setupValues()
+            }
+        }
+        
+        let cancelAction = UIAlertAction(title: ToDoList.localizable.alert.cancel.localized, style: .cancel) { (_) in }
+        
+        alertController.addTextField { (textField) in
+            textField.placeholder = "192.168.0.1:3000"
+            textField.keyboardType = .numbersAndPunctuation
+        }
+        
+        alertController.addAction(confirmAction)
+        alertController.addAction(cancelAction)
+        
+        self.present(alertController, animated: true, completion: nil)
     }
 }

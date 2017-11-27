@@ -16,6 +16,9 @@ enum ToDoList {
         case userIcon           = "login_usuario"
         case passwordIcon       = "login_senha"
         case icon               = "icon"
+        case signOut            = "signOut"
+        case ip                 = "ip"
+        case done               = "done"
     }
     
     enum type: String, Codable, CodingKey {
@@ -74,6 +77,7 @@ enum ToDoList {
             case remove     = "alertType.remove"
             case decline    = "alertType.decline"
             case accept     = "alertType.accept"
+            case success    = "alertType.success"
         }
         
         enum formFields: String, LocalizeRepresentable {

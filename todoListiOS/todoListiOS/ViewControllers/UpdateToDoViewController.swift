@@ -144,7 +144,6 @@ class UpdateToDoViewController: FormViewController {
         toDo?.isCompleted = isCompleted
         
         TaskNetworkAdapter.update(toDo: toDo!, success: { (toDo) in
-            print(toDo)
             self.alert(withTitle: "Updated", message: "")
         }) { (error) in
             if let err = error as? MoyaError, let data = err.response?.data {

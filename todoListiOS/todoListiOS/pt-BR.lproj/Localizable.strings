@@ -95,6 +95,7 @@
 "alert.cancel"      = "Cancelar";
 "alert.createdAt"   = "Criado em";
 "alert.ok"          = "Ok";
+"alertType.success" = "Cadastrado com sucesso";
 
 // type - Portuguese - en.lproj/Localizable.strings
 

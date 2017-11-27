@@ -21,6 +21,9 @@ var mongoose = require('mongoose'),
         });
       } else {
         user.hash_password = undefined;
+        user.fullName = undefined;
+        user.__v = undefined;
+        user.fullName = "ToDoList"
         return res.json(user);
       }
     });

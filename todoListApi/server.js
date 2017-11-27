@@ -7,7 +7,8 @@ User = require('./api/models/userModel'),
 bodyParser = require('body-parser'),
 jsonwebtoken = require("jsonwebtoken");
 
-mongoose.Promise = global.Promise;
+// mongoose instance connection url connection
+mongoose.Promise = global.Promise; //async operations
 mongoose.connect('mongodb://localhost/Tododb');
 
 
@@ -26,8 +27,8 @@ if (req.headers && req.headers.authorization && req.headers.authorization.split(
   next();
 }
 });
-var routes = require('./api/routes/todoListRoutes');
-routes(app);
+var routes = require('./api/routes/todoListRoutes'); //importing route
+routes(app); //register the route
 
 app.use(function(req, res) {
   res.status(404).send({ url: req.originalUrl + ' not found' })

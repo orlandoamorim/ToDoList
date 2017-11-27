@@ -13,10 +13,10 @@ struct User: Codable {
     var created: String
     var email: String
     var name: String
-    
+
     enum CodingKeys: String, CodingKey {
         case id = "_id"
-        case created
+        case created = "created_at"
         case email
         case name = "fullName"
     }

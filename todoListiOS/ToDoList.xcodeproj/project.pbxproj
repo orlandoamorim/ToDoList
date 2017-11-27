@@ -27,6 +27,7 @@
 		186D228F1FCA4883006DE52E /* TaskNetworkAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 186D228E1FCA4882006DE52E /* TaskNetworkAdapter.swift */; };
 		186D22911FCA507F006DE52E /* AddToDoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 186D22901FCA507F006DE52E /* AddToDoViewController.swift */; };
 		186D22941FCA646C006DE52E /* UpdateToDoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 186D22931FCA646C006DE52E /* UpdateToDoViewController.swift */; };
+		18B80FA01FCC82E400D8B2E9 /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B80F9F1FCC82E400D8B2E9 /* UIColor+Extensions.swift */; };
 		1BBCE34143C6AFE92FC04DC9 /* Pods_todoListiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 245D86F00B96F32F64CD60A8 /* Pods_todoListiOS.framework */; };
 		21F2E215DE8331F2E2D315DA /* Pods_todoListiOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5825C10FAE57A5F8A506141 /* Pods_todoListiOSTests.framework */; };
 		4FC7C5A3BEDBBD0E7BAFC2B0 /* Pods_todoListiOSUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8BA3322FF28C597D0B15174 /* Pods_todoListiOSUITests.framework */; };
@@ -79,6 +80,7 @@
 		186D228E1FCA4882006DE52E /* TaskNetworkAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TaskNetworkAdapter.swift; path = API/TaskNetworkAdapter.swift; sourceTree = "<group>"; };
 		186D22901FCA507F006DE52E /* AddToDoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AddToDoViewController.swift; path = ViewControllers/AddToDoViewController.swift; sourceTree = "<group>"; };
 		186D22931FCA646C006DE52E /* UpdateToDoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UpdateToDoViewController.swift; path = ViewControllers/UpdateToDoViewController.swift; sourceTree = "<group>"; };
+		18B80F9F1FCC82E400D8B2E9 /* UIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UIColor+Extensions.swift"; path = "Extensions/UIColor+Extensions.swift"; sourceTree = "<group>"; };
 		245D86F00B96F32F64CD60A8 /* Pods_todoListiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_todoListiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3DEDD5FE38753D503F88E29B /* Pods-todoListiOSUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-todoListiOSUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-todoListiOSUITests/Pods-todoListiOSUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		41EE303567AE2BD4E8943DF8 /* Pods-todoListiOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-todoListiOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-todoListiOS/Pods-todoListiOS.release.xcconfig"; sourceTree = "<group>"; };
@@ -145,13 +147,13 @@
 			isa = PBXGroup;
 			children = (
 				186D226F1FC9F6A6006DE52E /* AppDelegate */,
-				186D22861FC9FD40006DE52E /* Theme */,
 				186D226E1FC9F693006DE52E /* Storyboards */,
-				186D22771FC9F9CB006DE52E /* Extensions */,
+				186D22721FC9F6F0006DE52E /* ViewControllers */,
 				186D226B1FC9F2F4006DE52E /* API */,
 				186D22651FC9ED8F006DE52E /* Models */,
-				186D22721FC9F6F0006DE52E /* ViewControllers */,
 				186D22831FC9FC95006DE52E /* Cells */,
+				186D22771FC9F9CB006DE52E /* Extensions */,
+				186D22861FC9FD40006DE52E /* Theme */,
 				186D22891FCA030F006DE52E /* Helpers */,
 			);
 			path = todoListiOS;
@@ -226,6 +228,7 @@
 			isa = PBXGroup;
 			children = (
 				186D22781FC9FA7B006DE52E /* Enum+Extensions.swift */,
+				18B80F9F1FCC82E400D8B2E9 /* UIColor+Extensions.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -596,6 +599,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				186D22691FC9EF25006DE52E /* ToDo.swift in Sources */,
+				18B80FA01FCC82E400D8B2E9 /* UIColor+Extensions.swift in Sources */,
 				186D22741FC9F70F006DE52E /* ToDoListTableViewController.swift in Sources */,
 				186D22881FC9FD8A006DE52E /* ToDoListTheme.swift in Sources */,
 				186D228B1FCA031B006DE52E /* FloatLabelTextField.swift in Sources */,
